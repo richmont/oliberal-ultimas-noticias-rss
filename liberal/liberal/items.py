@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Define here the models for your scraped items
-#
-# See documentation in:
-# https://doc.scrapy.org/en/latest/topics/items.html
-
 import scrapy
 
 
 class LiberalItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    title = scrapy.Field()
-    head = scrapy.Field()
-    link = scrapy.Field()
+
+    title = scrapy.Field() # título da notícia
+    author = scrapy.Field() # autor
+    link = scrapy.Field() # link que leva a notícia
+    texto = scrapy.Field() # conteúdo
+    imagem_url = scrapy.Field() # endereço sem domínio da imagem exibida na notícia
+    img_sub = scrapy.Field() # legenda da imagem
