@@ -11,3 +11,4 @@ class LiberalItem(scrapy.Item):
     texto = scrapy.Field() # conteúdo
     imagem_url = scrapy.Field() # endereço sem domínio da imagem exibida na notícia
     img_sub = scrapy.Field() # legenda da imagem
+    data_pub = scrapy.Field() # data de publicação da notícia
