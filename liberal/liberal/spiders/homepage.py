@@ -25,7 +25,6 @@ class HomepageSpider(scrapy.Spider):
         texto = response.css("div.textbody p::text").extract()
         texto = "".join(texto)
         # armazena tudo que foi coletado em um item do tipo "notícia"
-
         notice = LiberalItem(title=title,link=link,author=author,imagem_url=imagem_url,img_sub=img_sub,texto=texto,data_pub=data_pub)
         # retorna o item ao scrapper
         yield notice
