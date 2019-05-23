@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from liberal.items import LiberalItem
-import sys
 
 class HomepageSpider(scrapy.Spider):
     name = 'homepage'
