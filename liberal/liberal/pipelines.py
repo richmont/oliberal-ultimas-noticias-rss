@@ -8,6 +8,7 @@
 #from xml.etree.ElementTree import Element, SubElement, Comment
 #from ElementTree_pretty import prettify
 from lxml import etree as ET
+from liberal.items import LiberalItem
 base_url = 'https://www.oliberal.com'
 root = ET.Element('rss',version="2.0" )
 # define as tags para criar o XML
@@ -40,17 +41,25 @@ width.text = '144'
 heigh.text = '144'
 
 
-# template da notícia em si, item
-item = ET.SubElement(channel,'item')
-title = ET.SubElement(item,'title')
-link = ET.SubElement(item,'link')
-description = ET.SubElement(item,'description')
-media = ET.SubElement(item,'media')
-#category = ET.SubElement(item,'category')
-pubDate = ET.SubElement(item,'pubDate')
 
 
-
+def elemento_vazio(item):
+    # substitui um elemento vazio por "não encontrado"
+    if item['title'] is None:
+        item['title'] = "Não encontrado"
+    if item['author'] is None:
+        item['title'] = "Não encontrado"
+    if item['link'] is None:
+        item['title'] = "Não encontrado"
+    if item['texto'] is None:
+        item['title'] = "Não encontrado"
+    if item['imagem_url'] is None:
+        item['title'] = "Não encontrado"
+    if item['img_sub'] is None:
+        item['title'] = "Não encontrado"
+    if item['data_pub'] is None:
+        item['data_pub'] = "Não encontrado"
+    return item
 
 class LiberalPipeline(object):
     def open_spider(self, spider):
@@ -61,10 +70,24 @@ class LiberalPipeline(object):
 
 
     def process_item(self, item, spider):
+        
+        #elemento_vazio(item)
+        # template da notícia em si, item
+        item_xml = ET.SubElement(channel,'item')
+        title = ET.SubElement(item_xml,'title')
+        link = ET.SubElement(item_xml,'link')
+        description = ET.SubElement(item_xml,'description')
+        media = ET.SubElement(item_xml,'media')
+        pubDate = ET.SubElement(item_xml,'pubDate')
         # preencher
         title.text = item['title']
+        
+        #print("exibindo conteúdo de title.text DEPOIS DA TENTATIVA DE POPULAR: "+title.text)
+        #print("exibindo tipo de title.text DEPOIS DA TENTATIVA DE POPULAR:"+type(title.text))
         link.text = item['link']
-        description.text = '<img src="'+  base_url + item['imagem_url']  + '" /><br />' + item['texto']
+        description.text = '<img src="'+\
+              base_url + item['imagem_url']  +\
+                   '" /><br />' + item['texto']
         pubDate.text = item['data_pub']
 
         return item
