@@ -7,3 +7,6 @@ load_dotenv(dotenv_path)
 
 URL_LIBERAL_ULTIMAS_NOTICIAS = os.environ.get("URL_LIBERAL_ULTIMAS_NOTICIAS")
 URL_LIBERAL_BASE = os.environ.get("URL_LIBERAL_BASE")
+TITULO = os.environ.get("TITULO")
+DESCRICAO = os.environ.get("DESCRICAO")
+IDIOMA = os.environ.get("IDIOMA")
