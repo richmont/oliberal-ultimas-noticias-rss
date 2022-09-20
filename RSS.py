@@ -59,7 +59,7 @@ class RSS():
         titulo = etree.SubElement(item, "title")
         link = etree.SubElement(item, "link")
         descricao = etree.SubElement(item, "description")
-        data = etree.SubElement(item, "data")
+        data = etree.SubElement(item, "pubDate")
 
         titulo.text = noticia.titulo
         link.text = noticia.url
