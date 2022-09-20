@@ -26,7 +26,9 @@ class Noticia():
         Returns:
             str: Título retornado
         """
-        if titulo[0].isupper():
+        # evita que suba erro quando título começa com aspas ou pontuação
+        titulo_limpo = re.sub('[^A-Za-z]+', '', titulo)
+        if titulo_limpo[0].isupper():
             return titulo
         else:
             raise errors.Titulo_nao_capitalizado("Título não começa com letra maiúscula: %s", titulo)
