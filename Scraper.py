@@ -15,7 +15,7 @@ class Scraper():
     @beartype
     def obter_pagina(self) -> str:
         try:
-            pagina_completa = requests.get(self.url)
+            pagina_completa = requests.get(self.url, verify=False)
             
             if pagina_completa.status_code == 200:
                 logging.debug("Status  200, retornando texto da página recebida")
@@ -30,8 +30,12 @@ class Scraper():
     @beartype
     def parse_pagina(self, pagina_completa: str) -> list:
         soup =  BeautifulSoup(pagina_completa, "html.parser")
-        soup_container_ultimas_noticias = soup.find_all("div", class_="teaser-featured estilo5 has-image")
-        logging.debug("Tamanho do elemento container %i", len(soup_container_ultimas_noticias))
+        soup_container_ultimas_noticias = soup.find_all(
+            "div", class_="teaser-featured estilo5 has-image"
+            )
+        logging.debug("Tamanho do elemento container %i", len(
+            soup_container_ultimas_noticias
+            ))
         lista_noticias = []
         for x in soup_container_ultimas_noticias:
             imagem_url = x.find("img")["src"]
@@ -39,7 +43,11 @@ class Scraper():
             chamada = x.find("p", class_="chamada").text
             data = x.find("p", class_="datetime").text
             url = x.find("p", class_="titulo").a["href"]
-            dict_noticia = {"titulo": titulo, "chamada": chamada, "data": data, "url": str(URL_LIBERAL_BASE + url), "url_imagem": str(URL_LIBERAL_BASE + imagem_url)}
+            dict_noticia = {"titulo": titulo, 
+                            "chamada": chamada, 
+                            "data": data, 
+                            "url": str(URL_LIBERAL_BASE + url), 
+                            "url_imagem": str(URL_LIBERAL_BASE + imagem_url)}
             noticia = Noticia(dict_noticia)
             lista_noticias.append(noticia)
         return lista_noticias
