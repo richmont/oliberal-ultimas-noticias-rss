@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from conf.settings import URL_LIBERAL_ULTIMAS_NOTICIAS, URL_LIBERAL_BASE
 import requests
 import logging
-from Noticia import Noticia
+from Noticia import UltimasNoticias
 logging.basicConfig(level=logging.DEBUG)
 
 class Scraper():
@@ -48,7 +48,7 @@ class Scraper():
                             "data": data, 
                             "url": str(URL_LIBERAL_BASE + url), 
                             "url_imagem": str(URL_LIBERAL_BASE + imagem_url)}
-            noticia = Noticia(dict_noticia)
+            noticia = UltimasNoticias(dict_noticia)
             lista_noticias.append(noticia)
         return lista_noticias
 

@@ -1,6 +1,6 @@
 from lxml import etree
 from beartype import beartype
-from Noticia import Noticia
+from Noticia import UltimasNoticias
 
 class RSS():
     @beartype
@@ -44,7 +44,7 @@ class RSS():
         return channel_tag
     
     @beartype
-    def adicionar_item(self, noticia: Noticia) -> etree._Element:
+    def adicionar_item(self, ultimas_noticias: UltimasNoticias) -> etree._Element:
         """
         Adiciona um elemento item com notícia na tag channel de base
         Parâmetro: dict_item (dict)\n
@@ -61,10 +61,10 @@ class RSS():
         descricao = etree.SubElement(item, "description")
         data = etree.SubElement(item, "pubDate")
 
-        titulo.text = noticia.titulo
-        link.text = noticia.url
-        descricao.text = str(f"![CDATA[{noticia.chamada}]]")
-        data.text = noticia.data
+        titulo.text = ultimas_noticias.titulo
+        link.text = ultimas_noticias.url
+        descricao.text = str(f"![CDATA[{ultimas_noticias.chamada}]]")
+        data.text = ultimas_noticias.data
         return item
     
     @beartype

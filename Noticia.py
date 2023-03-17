@@ -3,7 +3,7 @@ from beartype import beartype
 import re
 import logging
 
-class Noticia():
+class UltimasNoticias():
     @beartype
     def __init__(self, conteudo: dict) -> None:
         
@@ -80,5 +80,5 @@ class errors():
 
 if __name__ == "__main__":
     dicionario = {"titulo": "Auashdiausdh", "url": "http://aisudhiads", "chamada": "aiushdasid", "data": "aisuhdiuads", "url_imagem": "http://ais.JPGuhdiaus"}
-    noticia = Noticia(dicionario)
-    print(noticia.imagem_url)
+    ultimas_noticias = UltimasNoticias(dicionario)
+    print(ultimas_noticias.imagem_url)

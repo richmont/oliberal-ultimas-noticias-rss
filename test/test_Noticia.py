@@ -1,4 +1,4 @@
-from Noticia import Noticia, errors
+from Noticia import UltimasNoticias, errors
 import pytest
 
 class Test_noticia_correta():
@@ -13,7 +13,7 @@ class Test_noticia_correta():
         return dicionario_ok
 
     def test_noticia_ok(self):
-        noticia = Noticia(self.dict_noticia_ok())
+        noticia = UltimasNoticias(self.dict_noticia_ok())
 
 class Test_noticia_incorreta():
     def noticia_titulo_minusculo(self):
@@ -28,7 +28,7 @@ class Test_noticia_incorreta():
 
     def test_noticia_titulo_minusculo(self):
         try:
-            noticia = Noticia(self.noticia_titulo_minusculo())
+            noticia = UltimasNoticias(self.noticia_titulo_minusculo())
         except errors.Titulo_nao_capitalizado:
             assert True
 
@@ -44,7 +44,7 @@ class Test_noticia_incorreta():
 
     def test_noticia_url_sem_http(self):
         try:
-            noticia = Noticia(self.noticia_url_sem_http())
+            noticia = UltimasNoticias(self.noticia_url_sem_http())
         except errors.Url_sem_http:
             assert True
     
@@ -60,6 +60,6 @@ class Test_noticia_incorreta():
 
     def test_noticia_url_imagem_extensao_errada(self):
         try:
-            noticia = Noticia(self.noticia_url_imagem_extensao_errada())
+            noticia = UltimasNoticias(self.noticia_url_imagem_extensao_errada())
         except errors.Imagem_url_sem_extensao:
             assert True
