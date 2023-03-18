@@ -14,7 +14,9 @@ class Scraper():
         _pagina_ultimas_noticias = self.obter_pagina(self._url)
         self.lista_ultimas_noticias = self.parse_pagina_ultimas_noticias(_pagina_ultimas_noticias)
         for x in self.lista_ultimas_noticias:
-            x.conteudo = self.parse_conteudo_noticia(x.url)
+            conteudo = self.parse_conteudo_noticia(x.url)
+            x.conteudo = conteudo.replace('src="/image/', f'src="{URL_LIBERAL_BASE}/image/')
+            
     
     @beartype
     def obter_pagina(self, url: str) -> str:
@@ -64,7 +66,6 @@ class Scraper():
         soup =  BeautifulSoup(pagina_conteudo, "html.parser")
         container_conteudo = soup.find_all("div", class_="textbody article__body")
         conteudo_bruto = container_conteudo[0].find_all("p")
-        
         conteudo = str()
         for x in conteudo_bruto:
             for y in x.contents:
