@@ -54,6 +54,7 @@ class RSS():
             link\n
             data
         """
+        
         item = etree.SubElement(self.channel_tag, "item")
 
         titulo = etree.SubElement(item, "title")
@@ -63,7 +64,8 @@ class RSS():
 
         titulo.text = ultimas_noticias.titulo
         link.text = ultimas_noticias.url
-        descricao.text = str(f"<![CDATA[{ultimas_noticias.chamada}]]>")
+        # https://stackoverflow.com/questions/44549514/cdata-getting-stripped-in-lxml-even-after-using-strip-cdata-false
+        descricao.text = etree.CDATA(ultimas_noticias.chamada)
         data.text = ultimas_noticias.data
         return item
     
