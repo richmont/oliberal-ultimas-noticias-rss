@@ -64,9 +64,9 @@ class RSS():
 
         titulo.text = ultimas_noticias.titulo
         link.text = ultimas_noticias.url
-        # https://stackoverflow.com/questions/44549514/cdata-getting-stripped-in-lxml-even-after-using-strip-cdata-false
-        descricao.text = etree.CDATA(ultimas_noticias.chamada)
         data.text = ultimas_noticias.data
+        # https://stackoverflow.com/questions/44549514/cdata-getting-stripped-in-lxml-even-after-using-strip-cdata-false
+        descricao.text = etree.CDATA(ultimas_noticias.chamada + "\n" + ultimas_noticias.conteudo)
         return item
     
     @beartype

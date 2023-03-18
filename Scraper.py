@@ -13,7 +13,8 @@ class Scraper():
         logging.debug("url recebido: %s", self._url)
         _pagina_ultimas_noticias = self.obter_pagina(self._url)
         self.lista_ultimas_noticias = self.parse_pagina_ultimas_noticias(_pagina_ultimas_noticias)
-        
+        for x in self.lista_ultimas_noticias:
+            x.conteudo = self.parse_conteudo_noticia(x.url)
     
     @beartype
     def obter_pagina(self, url: str) -> str:
@@ -46,18 +47,32 @@ class Scraper():
             chamada = x.find("p", class_="chamada").text
             data = x.find("p", class_="datetime").text
             url = x.find("p", class_="titulo").a["href"]
+            conteudo = self.parse_conteudo_noticia(str(URL_LIBERAL_BASE + url))
             dict_noticia = {"titulo": titulo, 
                             "chamada": chamada, 
                             "data": data, 
                             "url": str(URL_LIBERAL_BASE + url), 
-                            "url_imagem": str(URL_LIBERAL_BASE + imagem_url)}
+                            "url_imagem": str(URL_LIBERAL_BASE + imagem_url),
+                            "conteudo": conteudo}
+            
             noticia = UltimasNoticias(dict_noticia)
             lista_noticias.append(noticia)
         return lista_noticias
 
     def parse_conteudo_noticia(self, url_noticia: str) -> str:
-        pass
-    
+        pagina_conteudo = self.obter_pagina(url_noticia)
+        soup =  BeautifulSoup(pagina_conteudo, "html.parser")
+        container_conteudo = soup.find_all("div", class_="textbody article__body")
+        conteudo_bruto = container_conteudo[0].find_all("p")
+        
+        conteudo = str()
+        for x in conteudo_bruto:
+            for y in x.contents:
+                conteudo = conteudo + str(y)
+        return conteudo
+  
+            
+                
     
 class errors():
     class URL_invalido(Exception):
@@ -66,10 +81,28 @@ class errors():
 if __name__ == "__main__":
     
     scraper  = Scraper(URL_LIBERAL_ULTIMAS_NOTICIAS)
+    
+    #url = "https://www.oliberal.com/ananindeua/cirio-solidario-imagem-de-nossa-senhora-visita-devotos-durante-acao-social-em-ananindeua-1.658519"
+    
+    #conteudo = scraper.parse_conteudo_noticia(url)
+    #print(conteudo)
     #pagina_completa = scraper.obter_pagina()
     #lista_noticias = scraper.parse_pagina_ultimas_noticias(pagina_completa)
-    for x in scraper.lista_ultimas_noticias:
-        print("titulo: ", x.titulo)
-        print("chamada: ", x.chamada)
-        print("url: ", x.url)
+    #for x in scraper.lista_ultimas_noticias:
+    #noticia = scraper.lista_ultimas_noticias[0]
+    
+    
+    #for x in container_conteudo:
+    #    print(x.find_all("p"))
+        #print(x)
+        #soup_container_conteudo = soup.find_all(
+        #    "div", class_="textbody article__body "
+        #    )
+        #print(soup_container_conteudo)
+        #for y in soup_container_conteudo:
+            #print(y.find("p", class_="paragrafo").text)
+    #print("titulo: ", noticia.titulo)
+    #print("chamada: ", noticia.chamada)
+    #print("url: ", noticia.url)
+    #rint("conteudo: ", noticia.conteudo)
     

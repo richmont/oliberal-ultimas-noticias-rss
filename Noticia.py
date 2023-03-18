@@ -12,6 +12,7 @@ class UltimasNoticias():
         self.chamada = conteudo["chamada"]
         self.data = conteudo["data"]
         self.imagem_url = self.recebe_imagem_url(conteudo["url_imagem"])
+        self.conteudo = None
 
     @beartype
     def recebe_titulo(self, titulo: str) -> str:
