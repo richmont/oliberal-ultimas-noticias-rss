@@ -63,7 +63,7 @@ class RSS():
 
         titulo.text = ultimas_noticias.titulo
         link.text = ultimas_noticias.url
-        descricao.text = str(f"![CDATA[{ultimas_noticias.chamada}]]")
+        descricao.text = str(f"<![CDATA[{ultimas_noticias.chamada}]]>")
         data.text = ultimas_noticias.data
         return item
     
