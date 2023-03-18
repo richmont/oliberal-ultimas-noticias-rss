@@ -9,13 +9,16 @@ logging.basicConfig(level=logging.DEBUG)
 class Scraper():
     @beartype
     def __init__(self, url: str) -> None:
-        self.url = url
-        logging.debug("url recebido: %s", self.url)
+        self._url = url
+        logging.debug("url recebido: %s", self._url)
+        _pagina_ultimas_noticias = self.obter_pagina(self._url)
+        self.lista_ultimas_noticias = self.parse_pagina_ultimas_noticias(_pagina_ultimas_noticias)
+        
     
     @beartype
-    def obter_pagina(self) -> str:
+    def obter_pagina(self, url: str) -> str:
         try:
-            pagina_completa = requests.get(self.url, verify=False)
+            pagina_completa = requests.get(url, verify=False)
             
             if pagina_completa.status_code == 200:
                 logging.debug("Status  200, retornando texto da página recebida")
@@ -52,7 +55,10 @@ class Scraper():
             lista_noticias.append(noticia)
         return lista_noticias
 
-
+    def parse_conteudo_noticia(self, url_noticia: str) -> str:
+        pass
+    
+    
 class errors():
     class URL_invalido(Exception):
         pass
@@ -60,9 +66,9 @@ class errors():
 if __name__ == "__main__":
     
     scraper  = Scraper(URL_LIBERAL_ULTIMAS_NOTICIAS)
-    pagina_completa = scraper.obter_pagina()
-    lista_noticias = scraper.parse_pagina_ultimas_noticias(pagina_completa)
-    for x in lista_noticias:
+    #pagina_completa = scraper.obter_pagina()
+    #lista_noticias = scraper.parse_pagina_ultimas_noticias(pagina_completa)
+    for x in scraper.lista_ultimas_noticias:
         print("titulo: ", x.titulo)
         print("chamada: ", x.chamada)
         print("url: ", x.url)
