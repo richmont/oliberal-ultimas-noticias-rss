@@ -28,7 +28,7 @@ class Scraper():
             raise errors.URL_invalido("URL inválido, verifique arquivo .env")
 
     @beartype
-    def parse_pagina(self, pagina_completa: str) -> list:
+    def parse_pagina_ultimas_noticias(self, pagina_completa: str) -> list:
         soup =  BeautifulSoup(pagina_completa, "html.parser")
         soup_container_ultimas_noticias = soup.find_all(
             "div", class_="teaser-featured estilo5 has-image"
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     
     scraper  = Scraper(URL_LIBERAL_ULTIMAS_NOTICIAS)
     pagina_completa = scraper.obter_pagina()
-    lista_noticias = scraper.parse_pagina(pagina_completa)
+    lista_noticias = scraper.parse_pagina_ultimas_noticias(pagina_completa)
     for x in lista_noticias:
         print("titulo: ", x.titulo)
         print("chamada: ", x.chamada)
