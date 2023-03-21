@@ -1,10 +1,17 @@
+import urllib3
 from beartype import beartype
 from bs4 import BeautifulSoup
 from conf.settings import URL_LIBERAL_ULTIMAS_NOTICIAS, URL_LIBERAL_BASE
 import requests
 import logging
 from Noticia import UltimasNoticias
+logger_scraper = logging.getLogger("Scraper")
 logging.basicConfig(level=logging.DEBUG)
+# desliga mensagens repetitivas a cada conexão
+logger_urllib = logging.getLogger('urllib3.connectionpool')
+logger_urllib.setLevel(logging.ERROR)
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 
 class Scraper():
     @beartype
@@ -15,7 +22,7 @@ class Scraper():
             url (str): Endereço da página a ser extraída
         """
         self._url = url
-        logging.debug("url recebido: %s", self._url)
+        logger_scraper.debug("url recebido: %s", self._url)
         _pagina_ultimas_noticias = self.obter_pagina(self._url)
         self.lista_ultimas_noticias = self.parse_pagina_ultimas_noticias(_pagina_ultimas_noticias)
         for x in self.lista_ultimas_noticias:
@@ -42,10 +49,10 @@ class Scraper():
             pagina_completa = requests.get(url, verify=False)
             
             if pagina_completa.status_code == 200:
-                logging.debug("Status  200, retornando texto da página recebida")
+                logger_scraper.debug("Status  200, retornando texto da página recebida")
                 return pagina_completa.text
             else:
-                logging.error("Código de status: %s", pagina_completa.status_code)
+                logger_scraper.error("Código de status: %s", pagina_completa.status_code)
         except requests.exceptions.MissingSchema:
             raise errors.URL_invalido("URL inválido, verifique arquivo .env")
         except requests.exceptions.ConnectionError:
@@ -65,7 +72,7 @@ class Scraper():
         soup_container_ultimas_noticias = soup.find_all(
             "div", class_="teaser-featured estilo5 has-image"
             )
-        logging.debug("Tamanho do elemento container %i", len(
+        logger_scraper.debug("Tamanho do elemento container %i", len(
             soup_container_ultimas_noticias
             ))
         lista_noticias = []
@@ -76,6 +83,7 @@ class Scraper():
             data = x.find("p", class_="datetime").text
             url = x.find("p", class_="titulo").a["href"]
             conteudo = self.parse_conteudo_noticia(str(URL_LIBERAL_BASE + url))
+            
             dict_noticia = {"titulo": titulo, 
                             "chamada": chamada, 
                             "data": data, 
@@ -96,6 +104,13 @@ class Scraper():
         Returns:
             str: HTML bruto com conteúdo de uma notícia
         """
+
+        def remover_veja_mais(soup: BeautifulSoup) -> BeautifulSoup:
+            tags_veja_mais = soup.find_all("div", class_="article-embed")
+            for tag in tags_veja_mais:
+                tag = tag.decompose()
+            return soup
+
         pagina_conteudo = self.obter_pagina(url_noticia)
         soup =  BeautifulSoup(pagina_conteudo, "html.parser")
         container_conteudo = soup.find_all("div", class_="textbody article__body")
@@ -104,7 +119,9 @@ class Scraper():
         for x in conteudo_bruto:
             for y in x.contents:
                 conteudo = conteudo + str(y)
-        return conteudo
+        bs_conteudo = BeautifulSoup(conteudo, "html.parser")
+
+        return remover_veja_mais(bs_conteudo).prettify()
   
             
                 
