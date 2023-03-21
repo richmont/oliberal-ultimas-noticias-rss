@@ -9,17 +9,35 @@ logging.basicConfig(level=logging.DEBUG)
 class Scraper():
     @beartype
     def __init__(self, url: str) -> None:
+        """Obtém e extrai informações da página de notícias O Liberal
+
+        Args:
+            url (str): Endereço da página a ser extraída
+        """
         self._url = url
         logging.debug("url recebido: %s", self._url)
         _pagina_ultimas_noticias = self.obter_pagina(self._url)
         self.lista_ultimas_noticias = self.parse_pagina_ultimas_noticias(_pagina_ultimas_noticias)
         for x in self.lista_ultimas_noticias:
             conteudo = self.parse_conteudo_noticia(x.url)
+            # substitui o url das imagens para endereço completo com domínio base do Liberal
             x.conteudo = conteudo.replace('src="/image/', f'src="{URL_LIBERAL_BASE}/image/')
             
     
     @beartype
     def obter_pagina(self, url: str) -> str:
+        """Recebe o HTML bruto da página
+
+        Args:
+            url (str): URL a ser tratado
+
+        Raises:
+            errors.URL_invalido: URL não possui "http"
+            errors.URL_invalido: Falha de conexão
+
+        Returns:
+            str: html completo da págin
+        """
         try:
             pagina_completa = requests.get(url, verify=False)
             
@@ -31,10 +49,18 @@ class Scraper():
         except requests.exceptions.MissingSchema:
             raise errors.URL_invalido("URL inválido, verifique arquivo .env")
         except requests.exceptions.ConnectionError:
-            raise errors.URL_invalido("URL inválido, verifique arquivo .env")
+            raise errors.FalhaConexao("Conexão com o URL malsucedida, verifique arquivo .env")
 
     @beartype
     def parse_pagina_ultimas_noticias(self, pagina_completa: str) -> list:
+        """Interpreta o HTML bruto para localizar informações de cada notícia na página
+
+        Args:
+            pagina_completa (str): HTML bruto da página
+
+        Returns:
+            list: Lista de objetos UltimaNoticia
+        """
         soup =  BeautifulSoup(pagina_completa, "html.parser")
         soup_container_ultimas_noticias = soup.find_all(
             "div", class_="teaser-featured estilo5 has-image"
@@ -62,6 +88,14 @@ class Scraper():
         return lista_noticias
 
     def parse_conteudo_noticia(self, url_noticia: str) -> str:
+        """Extrai o conteúdo em forma de HTML de uma notícia
+
+        Args:
+            url_noticia (str): endereço direto da notícia
+
+        Returns:
+            str: HTML bruto com conteúdo de uma notícia
+        """
         pagina_conteudo = self.obter_pagina(url_noticia)
         soup =  BeautifulSoup(pagina_conteudo, "html.parser")
         container_conteudo = soup.find_all("div", class_="textbody article__body")
@@ -77,6 +111,9 @@ class Scraper():
     
 class errors():
     class URL_invalido(Exception):
+        pass
+
+    class FalhaConexao(Exception):
         pass
 
 if __name__ == "__main__":

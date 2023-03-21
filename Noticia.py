@@ -6,7 +6,11 @@ import logging
 class UltimasNoticias():
     @beartype
     def __init__(self, conteudo: dict) -> None:
-        
+        """Transforma um dicionário com informações de uma notícia em objeto
+
+        Args:
+            conteudo (dict): conteúdo que irá gerar a notícia
+        """
         self.titulo = self.recebe_titulo(conteudo["titulo"])
         self.url = self.recebe_url(conteudo["url"])
         self.chamada = conteudo["chamada"]
@@ -22,10 +26,10 @@ class UltimasNoticias():
             titulo (str): Título recebido
 
         Raises:
-            errors.Titulo_nao_capitalizado: 
+            errors.Titulo_nao_capitalizado: Erro caso o título seja capturado incorretamente
 
         Returns:
-            str: Título retornado
+            str: Título da notícia
         """
         # evita que suba erro quando título começa com aspas ou pontuação
         titulo_limpo = re.sub('[^A-Za-z]+', '', titulo)
@@ -35,16 +39,16 @@ class UltimasNoticias():
             raise errors.Titulo_nao_capitalizado("Título não começa com letra maiúscula: %s", titulo)
 
     def recebe_url(self, url: str) -> str:
-        """Verifica se a URL possui 'http' no início, sobe exceção se negativo
+        """Verifica se a URL possui 'http' no início
 
         Args:
             url (str): url referente a notícia
 
         Raises:
-            errors.Url_sem_http: Exceção quando url não possui http no começo
+            errors.Url_sem_http: O url não possui http no começo
 
         Returns:
-            str: url caso passe no teste
+            str: url retornado no início, confirmando que está correto
         """
         if url[0:4] == "http":
             return url
@@ -58,14 +62,14 @@ class UltimasNoticias():
             imagem_url (str): endereço que aponta para imagem de notícia
 
         Raises:
-            errors.Imagem_url_sem_extensao: 
+            errors.Imagem_url_sem_extensao: URL incompatível com formato de imagem
 
         Returns:
             str: imagem_url
         """
         imagem_url = self.recebe_url(imagem_url)
         ocorrencias_formato = re.findall(r'.jpg|.png|.jpeg|.gif|.jfif', imagem_url, re.IGNORECASE)
-        if any(ocorrencias_formato):
+        if any(ocorrencias_formato): # url da imagem possui uma das extensões suportadas
             return imagem_url
         else:
             raise errors.Imagem_url_sem_extensao("URL da imagem não possui extensão suportada: %s", imagem_url)

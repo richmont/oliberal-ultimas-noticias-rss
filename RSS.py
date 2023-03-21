@@ -26,8 +26,7 @@ class RSS():
         Contém informações do canal de notícias\n
         Preenchido com dados do dict_channel\n
 
-        Retorna:\n
-            channel_tag (etree._Element)\n
+        Retorna: (etree._Element)
         """
         channel_tag = etree.SubElement(self.tag_base_rss, "channel")
 
@@ -70,8 +69,18 @@ class RSS():
         return item
     
     @beartype
-    def gravar_xml(self, nome_arquivo):
-        self.documento.write(nome_arquivo, encoding='utf-8', xml_declaration=True, pretty_print=True)
+    def gravar_xml(self, nome_arquivo: str) -> None:
+        """Grava em disco o arquivo XML do feed RSS resultante da raspagem
+
+        Args:
+            nome_arquivo (str): nome do arquivo a ser gravado
+        """
+        self.documento.write(
+            nome_arquivo, 
+            encoding='utf-8', 
+            xml_declaration=True, 
+            pretty_print=True
+            )
 
 
 
