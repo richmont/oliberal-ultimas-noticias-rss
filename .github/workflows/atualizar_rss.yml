@@ -1,0 +1,30 @@
+name: Atualizar RSS
+
+on:
+  workflow_dispatch:
+  schedule: ## Schedule the job to run at 12.am daily.
+    - cron: '07 16 * 10 7'
+
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+      steps:
+      - uses: actions/checkout@v3
+      - name: Configurar o python 3.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.11"
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Executar raspagem e gerar rss
+        run: |
+          python3 main.py
