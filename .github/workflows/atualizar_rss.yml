@@ -30,7 +30,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add docs/rss.xml
+          git add -A docs/rss.xml
           git commit -a -m "Atualizando xml do feed"
 
       - name: push nas mudanças
