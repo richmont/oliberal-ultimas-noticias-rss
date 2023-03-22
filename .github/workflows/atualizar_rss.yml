@@ -25,3 +25,16 @@ jobs:
       - name: Executar raspagem e gerar rss
         run: |
           python3 main.py
+          
+      - name: commit novo rss
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add docs/rss.xml
+          git commit -a -m "Atualizando xml do feed"
+
+      - name: push nas mudanças
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main 
