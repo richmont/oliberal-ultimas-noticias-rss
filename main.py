@@ -9,4 +9,4 @@ if __name__ == "__main__":
     rss = RSS(dict_channel)
     for x in scraper.lista_ultimas_noticias:
         rss.adicionar_item(x)
-    rss.gravar_xml("rss.xml")
+    rss.gravar_xml("docs/rss.xml")
